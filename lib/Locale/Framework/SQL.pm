@@ -4,7 +4,7 @@ use strict;
 use DBI;
 use DBI::Const::GetInfoType;
 
-our $VERSION='0.05';
+our $VERSION='0.06';
 
 my %cache;
 
@@ -146,7 +146,7 @@ __END__
 
 =head1 NAME
 
-Locale::Framework::SQL - A backend for Locale::Framework internationalization
+Locale::Framework::SQL - An SQL Backend for Locale::Framework
 
 =head1 SYNOPSIS
 
