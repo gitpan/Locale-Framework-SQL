@@ -1,5 +1,7 @@
 Revision history for Perl extension Lang.
 
+0.07 Changed testscript to skip tests it cannot handle.
+
 0.06 Changed name in POD
 
 0.05 Changed name from 'Lang' to 'Locale::Framework'.

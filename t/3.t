@@ -20,50 +20,54 @@ my $TABLE="lang_sql_trans_test";
 
 ### Locale::Framework::wxLocale testing
 
-my $DSN=$ENV{"DSN"} or die "You need to specify a DSN to run this test";
-my $DBUSER=$ENV{"DBUSER"} or die "You need to specify a DBUSER to run this test";
+my $DSN=$ENV{"DSN"};
+my $DBUSER=$ENV{"DBUSER"};
 my $DBPASS=$ENV{"DBPASS"};
 
-Locale::Framework::init(new Locale::Framework::SQL(DSN => $DSN,DBUSER => $DBUSER,DBPASS => $DBPASS, TABLE => $TABLE));
+SKIP: {
+  skip "You need to specify a DSN to run this test",5 unless ($DSN);
+  skip "You need to specify a DBUSER to run this test",5 unless ($DBUSER);
 
-ok(_T("This is a test") eq "This is a test","Lang with Locale::Framework::SQL backend");
+  Locale::Framework::init(new Locale::Framework::SQL(DSN => $DSN,DBUSER => $DBUSER,DBPASS => $DBPASS, TABLE => $TABLE));
 
-### Set language
+  ok(_T("This is a test") eq "This is a test","Lang with Locale::Framework::SQL backend");
 
-Locale::Framework::language("nl");
-ok((not _T("This is a test") eq "Dit is een test"),"Lang with Locale::Framework::SQL backend");
+  ### Set language
 
-### Set translation and reread translation
+  Locale::Framework::language("nl");
+  ok((not _T("This is a test") eq "Dit is een test"),"Lang with Locale::Framework::SQL backend");
 
-Locale::Framework::language("de");
-ok((Locale::Framework::set_translation("This is a test","Dies ist ein test")),"Lang with Locale::Framework::SQL backend");
+  ### Set translation and reread translation
 
-Locale::Framework::language("nl");
-ok((Locale::Framework::set_translation("This is a test","Dit is een test")),"Lang with Locale::Framework::SQL backend");
-Locale::Framework::clear_cache();
-ok(_T("This is a test") eq "Dit is een test","Lang with Locale::Framework::SQL backend");
+  Locale::Framework::language("de");
+  ok((Locale::Framework::set_translation("This is a test","Dies ist ein test")),"Lang with Locale::Framework::SQL backend");
 
-### Cleanup
+  Locale::Framework::language("nl");
+  ok((Locale::Framework::set_translation("This is a test","Dit is een test")),"Lang with Locale::Framework::SQL backend");
+  Locale::Framework::clear_cache();
+  ok(_T("This is a test") eq "Dit is een test","Lang with Locale::Framework::SQL backend");
 
-my $dbh=DBI->connect($DSN,$DBUSER,$DBPASS);
-my $driver=lc($dbh->{Driver}->{Name});
+  ### Cleanup
 
-if ($driver eq "pg") {
-  $dbh->do("DROP INDEX $TABLE"."_idx");
-  $dbh->do("DROP TABLE $TABLE");
-} elsif ($driver eq "mysql") {
-  $dbh->do("DROP INDEX $TABLE"."_idx ON $TABLE");
-  $dbh->do("DROP TABLE $TABLE");
-} elsif ($driver eq "sqlite") {
-  $dbh->do("DROP INDEX $TABLE"."_idx");
-  $dbh->do("DROP TABLE $TABLE");
-} else { # Hope for the best
-  $self->{"dbh"}->{"PrintError"}=0;
-  $dbh->do("DROP INDEX $TABLE"."_idx");
-  $dbh->do("DROP TABLE $TABLE");
+  my $dbh=DBI->connect($DSN,$DBUSER,$DBPASS);
+  my $driver=lc($dbh->{Driver}->{Name});
+
+  if ($driver eq "pg") {
+    $dbh->do("DROP INDEX $TABLE"."_idx");
+    $dbh->do("DROP TABLE $TABLE");
+  } elsif ($driver eq "mysql") {
+    $dbh->do("DROP INDEX $TABLE"."_idx ON $TABLE");
+    $dbh->do("DROP TABLE $TABLE");
+  } elsif ($driver eq "sqlite") {
+    $dbh->do("DROP INDEX $TABLE"."_idx");
+    $dbh->do("DROP TABLE $TABLE");
+  } else {			# Hope for the best
+    $self->{"dbh"}->{"PrintError"}=0;
+    $dbh->do("DROP INDEX $TABLE"."_idx");
+    $dbh->do("DROP TABLE $TABLE");
+  }
+
+  $dbh->disconnect();
+
 }
-
-$dbh->disconnect();
-
-
 

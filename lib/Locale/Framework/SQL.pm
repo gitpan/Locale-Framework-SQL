@@ -4,7 +4,7 @@ use strict;
 use DBI;
 use DBI::Const::GetInfoType;
 
-our $VERSION='0.06';
+our $VERSION='0.07';
 
 my %cache;
 
