@@ -4,7 +4,7 @@ use strict;
 use DBI;
 use DBI::Const::GetInfoType;
 
-our $VERSION='0.04';
+our $VERSION='0.05';
 
 my %cache;
 
@@ -174,7 +174,7 @@ module.
 
 =head1 DESCRIPTION
 
-=head2 C<new(DSN => ..., DBUSER => ..., DBPASS => ..., [TABLE => ...])> --E<gt> Locale::Framework::SQL
+=head2 C<new(DSN =E<gt> ..., DBUSER =E<gt> ..., DBPASS =E<gt> ..., [TABLE =E<gt> ...])> --E<gt> Locale::Framework::SQL
 
 Instantiates a new backend object with given DSN, user and password.
 It creates, if not already existent, table 'lang_translations' and 
